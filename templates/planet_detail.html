@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ planet.name }} Details{% endblock %}
+
+{% block header %}{{ planet.name }} Details{% endblock %}
+
+{% block content %}
+  <p>{{ planet.description }}</p>
+  <!-- Display other planet information and associated projects if needed -->
+{% endblock %}

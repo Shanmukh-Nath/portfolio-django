@@ -1,0 +1,85 @@
+{% load static %}
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        *{
+            margin: 0;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="scene-container"></div>
+
+<script>
+  // Set up scene, camera, and renderer
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.getElementById('scene-container').appendChild(renderer.domElement);
+</script>
+<script>
+  // Create sun
+  const sunGeometry = new THREE.SphereGeometry(6, 32, 32);
+  const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
+  const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+  scene.add(sun);
+
+  // Create planets
+  const merplanetGeometry = new THREE.SphereGeometry(0.6, 32, 32);
+  const merplanetMaterial = new THREE.MeshBasicMaterial({ color: 0x3498db });
+
+  const venplanetGeometry = new THREE.SphereGeometry(0.95, 32, 32);
+  const venplanetMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+
+  const mercury = new THREE.Mesh(merplanetGeometry, merplanetMaterial);
+  const venus = new THREE.Mesh(venplanetGeometry, venplanetMaterial);
+  // Create more planets and position them
+
+  // Position planets in orbits around the sun
+  mercury.position.set(12, 0, 0);
+  venus.position.set(16, 0, 4);
+  // Position other planets
+
+  // Add planets to the scene
+  scene.add(mercury);
+  scene.add(venus);
+</script>
+<script>
+  // Animate function
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Update planet positions for orbit
+    mercury.rotation.y += 0.005;
+    venus.rotation.y += 0.003;
+    // Update other planets
+
+    renderer.render(scene, camera);
+  }
+
+  // Call animate function
+  animate();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+  // Create OrbitControls
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  camera.position.set(0, 10, 20); // Adjust camera position
+
+  // Add event listeners for window resize
+  window.addEventListener('resize', () => {
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+
+    camera.aspect = newWidth / newHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(newWidth, newHeight);
+  });
+</script>
+<script src="{% static 'js/shooting_stars.js'%}"></script>
+</body>
+</html>
