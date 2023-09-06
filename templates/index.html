@@ -1,85 +1,221 @@
 {% load static %}
 <html>
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <title>S V Shanmukh Nath</title>
     <style>
-        *{
+        body {
             margin: 0;
             border: 0;
+            overflow: hidden; /* Hide any overflow */
+            {#background-image: url("{% static 'img/galaxy1.png' %}");#}
+            {#background-size: cover;#}
+            {#background-color: black;#}
+            {#background-repeat: no-repeat;#}
         }
+
+
+
+
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/ConvolutionShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+
 </head>
 <body>
-<div id="scene-container"></div>
 
-<script>
-  // Set up scene, camera, and renderer
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.getElementById('scene-container').appendChild(renderer.domElement);
-</script>
-<script>
-  // Create sun
-  const sunGeometry = new THREE.SphereGeometry(6, 32, 32);
-  const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
-  const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-  scene.add(sun);
+    <div>
+        <canvas class="webgl"></canvas>
+    </div>
+{#    <script src="{% static 'js/typing.js' %}"></script>#}
 
-  // Create planets
-  const merplanetGeometry = new THREE.SphereGeometry(0.6, 32, 32);
-  const merplanetMaterial = new THREE.MeshBasicMaterial({ color: 0x3498db });
+    <script>
+        {#const scene = new THREE.Scene();#}
+        {#const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);#}
+        {#camera.position.set(0, 0, 5); // Adjust camera position#}
+        {##}
+        {#// Create a WebGL renderer with alpha: true#}
+        {#const renderer = new THREE.WebGLRenderer({ alpha: true });#}
+        {#renderer.setSize(window.innerWidth, window.innerHeight);#}
+        {##}
+        {#// Append the renderer's canvas element directly to the body#}
+        {#document.body.appendChild(renderer.domElement);#}
+        {##}
+        {#// Add ambient light to make the sun visible#}
+        {#const ambientLight = new THREE.AmbientLight(0x404040);#}
+        {#scene.add(ambientLight);#}
+        {##}
+        {#const sunGeometry = new THREE.SphereGeometry(1.5, 32, 32);#}
+        {#const sunTexture = new THREE.TextureLoader().load("{% static 'img/8k_sun.jpg' %}");#}
+        {#const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });#}
+        {#const sun = new THREE.Mesh(sunGeometry, sunMaterial);#}
+        {#sun.scale.set(1.5, 1.5, 1.5);#}
+        {#scene.add(sun);#}
+        {##}
+        {#// Position the sun in front of the camera#}
+        {#sun.position.set(0, 0, -5);#}
+        {##}
+        {#// Animation function#}
+        {#const animate = () => {#}
+        {#    requestAnimationFrame(animate);#}
+        {##}
+        {#    // Rotate the sun (optional)#}
+        {#    sun.rotation.x += 0.005;#}
+        {#    sun.rotation.y += 0.005;#}
+        {##}
+        {#    renderer.render(scene, camera);#}
+        //{#};#}
+        {##}
+        {#animate();#}
 
-  const venplanetGeometry = new THREE.SphereGeometry(0.95, 32, 32);
-  const venplanetMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 
-  const mercury = new THREE.Mesh(merplanetGeometry, merplanetMaterial);
-  const venus = new THREE.Mesh(venplanetGeometry, venplanetMaterial);
-  // Create more planets and position them
+        let scene;
+let camera;
+let renderer;
+const canvas = document.getElementsByTagName("canvas")[0];
+scene = new THREE.Scene();
+const fov = 45;
+const aspect = window.innerWidth / window.innerHeight;
+const near = 0.1;
+const far = 1000;
 
-  // Position planets in orbits around the sun
-  mercury.position.set(12, 0, 0);
-  venus.position.set(16, 0, 4);
-  // Position other planets
 
-  // Add planets to the scene
-  scene.add(mercury);
-  scene.add(venus);
-</script>
-<script>
-  // Animate function
-  function animate() {
-    requestAnimationFrame(animate);
 
-    // Update planet positions for orbit
-    mercury.rotation.y += 0.005;
-    venus.rotation.y += 0.003;
-    // Update other planets
 
-    renderer.render(scene, camera);
-  }
+//default renderer
+renderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+  antialias: true,
+});
+renderer.autoClear = false;
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
+renderer.setClearColor(0x000000, 0.0);
+document.body.appendChild(renderer.domElement);
 
-  // Call animate function
-  animate();
-</script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script>
-  // Create OrbitControls
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  camera.position.set(0, 10, 20); // Adjust camera position
+//camera
+camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-  // Add event listeners for window resize
-  window.addEventListener('resize', () => {
-    const newWidth = window.innerWidth;
-    const newHeight = window.innerHeight;
 
-    camera.aspect = newWidth / newHeight;
+const controls = new THREE.OrbitControls(camera,renderer.domElement);
+
+camera.position.set(0,0,10);
+controls.target.set(0,0,0);
+controls.minDistance = 2;
+controls.maxDistance = 50;
+
+scene.add(camera);
+//bloom renderer
+const renderScene = new THREE.RenderPass(scene, camera);
+const bloomPass = new THREE.UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  1.5,
+  0.4,
+  0.85
+);
+bloomPass.threshold = 0;
+bloomPass.strength = 2; //intensity of glow
+bloomPass.radius = 0;
+const bloomComposer = new THREE.EffectComposer(renderer);
+bloomComposer.setSize(window.innerWidth, window.innerHeight);
+bloomComposer.renderToScreen = true;
+bloomComposer.addPass(renderScene);
+bloomComposer.addPass(bloomPass);
+
+//sun object
+const color = new THREE.Color("#FDB813");
+const sungeometry = new THREE.SphereGeometry(2,32,32);
+const sunTexture = new THREE.TextureLoader().load("{% static 'img/8k_sun.jpg' %}");
+const sunmaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+const sun = new THREE.Mesh(sungeometry, sunmaterial);
+sun.position.set(-8, 0, 0);
+sun.layers.set(1);
+scene.add(sun);
+
+
+{#//mer object#}
+{#const color1 = new THREE.Color("#FDB813");#}
+{#const mergeometry = new THREE.SphereGeometry(0.8,32,32);#}
+{#const merTexture = new THREE.TextureLoader().load("{% static 'img/8k_mercury.jpg' %}");#}
+{#const mermaterial = new THREE.MeshBasicMaterial({ map: merTexture });#}
+{#const mer = new THREE.Mesh(mergeometry, mermaterial);#}
+{#mer.position.set(-5, 0, 0);#}
+{#mer.layers.set(1);#}
+{#scene.add(mer);#}
+{##}
+{#//ven object#}
+{#const color2 = new THREE.Color("#FDB813");#}
+{#const vengeometry = new THREE.SphereGeometry(1,32,32);#}
+{#const venTexture = new THREE.TextureLoader().load("{% static 'img/ven0aaa2.jpg' %}");#}
+{#const venmaterial = new THREE.MeshBasicMaterial({ map:venTexture });#}
+{#const ven = new THREE.Mesh(vengeometry, venmaterial);#}
+{#ven.position.set(-3, 0, 0);#}
+{#ven.layers.set(1);#}
+{#scene.add(ven);#}
+{##}
+{#//ear object#}
+{#const color3 = new THREE.Color("#FDB813");#}
+{#const eargeometry = new THREE.SphereGeometry(0.5,32,32);#}
+{#const earTexture = new THREE.TextureLoader().load("{% static 'img/8k_earth_daymap.jpg' %}");#}
+{#const earmaterial = new THREE.MeshBasicMaterial({ map: earTexture });#}
+{#const ear = new THREE.Mesh(eargeometry, earmaterial);#}
+{#ear.position.set(8, 0, 0);#}
+{#ear.layers.set(1);#}
+{#scene.add(ear);#}
+
+
+// galaxy geometry
+const starGeometry = new THREE.SphereGeometry(80, 64, 64);
+
+// galaxy material
+const starMaterial = new THREE.MeshBasicMaterial({
+  map: THREE.ImageUtils.loadTexture("{% static 'img/galaxy1.png' %}"),
+  side: THREE.BackSide,
+  transparent: true,
+});
+
+// galaxy mesh
+const starMesh = new THREE.Mesh(starGeometry, starMaterial);
+starMesh.layers.set(1);
+scene.add(starMesh);
+
+//ambient light
+const ambientlight = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambientlight);
+
+//resize listner
+window.addEventListener(
+  "resize",
+  () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    bloomComposer.setSize(window.innerWidth, window.innerHeight);
+  },
+  false
+);
 
-    renderer.setSize(newWidth, newHeight);
-  });
-</script>
-<script src="{% static 'js/shooting_stars.js'%}"></script>
+//animation loop
+const animate = () => {
+  requestAnimationFrame(animate);
+  controls.update();
+  starMesh.rotation.y += 0.0003;
+  sun.rotation.y += 0.001
+  camera.layers.set(1);
+  bloomComposer.render();
+};
+
+animate();
+
+
+
+    </script>
 </body>
 </html>
